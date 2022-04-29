@@ -1,23 +1,38 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import Loaded from './components/loaded';
+import Race from './components/race';
+import Welcome from './components/welcome';
+import {AntData} from './constants/data';
 
 function App() {
+  const [status, setStatus] = useState("WELCOME");
+  const [antData] = useState(AntData);
+
+  function setStatusState(status) {
+    setStatus(status);
+  }
+
+  const renderActiveStatus = () => {
+    switch(status) { 
+      case "WELCOME":
+      case "RESTART": 
+        return(<Welcome updateStatus={setStatusState} />);
+        break;
+      case "LOADED":  
+        return(<Loaded ants={antData.ants} updateStatus={setStatusState} />);
+        break;  
+      case "RACE":
+        return(<Race ants={antData.ants} updateStatus={setStatusState} />);
+        break; 
+      default: 
+        return(<h1>Error: invalid status: {status}</h1>);
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={"App"}>
+      { renderActiveStatus() }
     </div>
   );
 }
